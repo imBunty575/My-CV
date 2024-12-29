@@ -4,21 +4,20 @@ jobs:
   build_latex:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Check out the repository
       - name: Set up Git repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       
-      # Step 2: Compile the LaTeX document
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
           root_file: My_CV.tex
       
-      # Step 3: Commit and push the compiled PDF to the repository
       - name: Commit and Push compiled PDF
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add My_CV.pdf
-          git commit -m "Update compiled PDF"
+          git commit -m "Update compiled PDF [skip ci]"
           git push
