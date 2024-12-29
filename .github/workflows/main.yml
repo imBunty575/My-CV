@@ -1,25 +1,41 @@
-name: Build LaTeX PDF
+name: Deploy PDF
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: danteev/texlive  # Pre-built Docker image with LaTeX pre-installed
-
     steps:
-    - name: Check out the repository
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Build PDF
-      run: latexmk -pdf -interaction=nonstopmode My_CV.tex
+      - name: Build
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: "My_CV.tex"
 
-    - name: Upload PDF artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: compiled-pdf
-        path: My_CV.pdf
+      - name: Copy
+        run: |
+          mkdir out
+          cp ./My_CV.pdf ./out/CV.pdf
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: CV
+          path: out/CV.pdf
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@3.6.2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          CLEAN: true
+          SINGLE_COMMIT: true
+          FOLDER: out
+          GIT_CONFIG_NAME: imBunty575
+          GIT_CONFIG_EMAIL: satyajeetbunty5752017@gmail.com
