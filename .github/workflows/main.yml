@@ -1,30 +1,26 @@
-name: LateX to PDF
-on:
-  push:
-    branches: 
-      - master
-      - develop
-    tags:
-       - '*'
-  pull_request:
-    branches: [ master ]
-
+name: Build LaTeX document
+on: [push]
 jobs:
   build_latex:
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Check out the repository with the GITHUB_TOKEN
       - name: Set up Git repository
         uses: actions/checkout@v4
-      - name: latex2pdf
-        id: compile-latex-document
-        uses: thomas-chauvet/latex2pdf-action@1.0.5
         with:
-          output_dir: output
-          main_latex_file: My_CV.tex
-          ctan_packages: amsmath amsfonts lua-uni-algos
-      - name: Upload PDF to the workflow tab
-        id: upload-workflow-tab
-        uses: actions/upload-artifact@v2
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 2: Compile the LaTeX document
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
         with:
-          name: output
-          path: output/My_CV.pdf
+          root_file: My_CV.tex
+      
+      # Step 3: Commit and push the compiled PDF to the repository
+      - name: Commit and Push compiled PDF
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add My_CV.pdf
+          git commit -m "Update compiled PDF [skip ci]"
+          git push origin main
