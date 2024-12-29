@@ -8,7 +8,7 @@ jobs:
       - name: Set up Git repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.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 }}
 
       # Step 2: Compile the LaTeX document
       - name: Compile LaTeX document
