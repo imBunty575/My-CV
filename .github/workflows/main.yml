@@ -8,19 +8,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: danteev/texlive  # Pre-built Docker image with LaTeX pre-installed
 
     steps:
-    - name: Check out repository
+    - name: Check out the repository
       uses: actions/checkout@v3
 
-    - name: Install LaTeX
-      run: sudo apt-get update && sudo apt-get install -y texlive-full
-
     - name: Build PDF
-      run: latexmk -pdf -interaction=nonstopmode "My CV.tex"
+      run: latexmk -pdf -interaction=nonstopmode docs/My CV.tex
 
-    - name: Upload artifact
+    - name: Upload PDF artifact
       uses: actions/upload-artifact@v3
       with:
         name: compiled-pdf
-        path: "My_CV.pdf"
+        path: docs/CV.pdf
