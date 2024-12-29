@@ -24,7 +24,7 @@ jobs:
           mkdir out
           cp ./My_CV.pdf ./out/CV.pdf
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: CV
           path: out/CV.pdf
